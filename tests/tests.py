@@ -165,6 +165,12 @@ def test_code_with_error(code: str):
     def func():
         statement
     """), id='Without import'
+    ),
+    pytest.param(
+        textwrap.dedent("""
+    if TYPE_CHECKING:
+        from app_package.module import B
+    """), id='Non local import'
     )
 ])
 def test_code_without_error(code: str):

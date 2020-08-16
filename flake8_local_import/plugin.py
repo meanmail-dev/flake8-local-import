@@ -32,9 +32,11 @@ class LocalImportPluginVisitor(Visitor):
 
     def visit(self, node: ast.AST) -> Any:
         previous = None
+        is_local = isinstance(node, ast.FunctionDef) or getattr(node, 'is_local', False)
         for child in ast.iter_child_nodes(node):
             child.parent = node
             child.previous = previous
+            child.is_local = is_local
             previous = child
 
         return super().visit(node)
@@ -52,6 +54,9 @@ class LocalImportPluginVisitor(Visitor):
         return self.generic_visit(node)
 
     def visit_Import(self, node: ast.Import) -> Any:
+        if not getattr(node, 'is_local', False):
+            return self.generic_visit(node)
+
         for name in node.names:
             self.assert_external_module(node, name.name or '')
 
@@ -83,6 +88,9 @@ class LocalImportPluginVisitor(Visitor):
             )
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> Any:
+        if not getattr(node, 'is_local', False):
+            return self.generic_visit(node)
+
         self.assert_external_module(node, node.module or '')
 
         return self.visit_import(node)
@@ -100,7 +108,7 @@ class LocalImportPluginVisitor(Visitor):
             isinstance(previous, (ast.Import, ast.ImportFrom, ast.arguments))
         )
 
-        if (not isinstance(parent, ast.FunctionDef) or not is_allowed_previous):
+        if not isinstance(parent, ast.FunctionDef) or not is_allowed_previous:
             self.error_from_node(LocalImportBeginningMethodBodyPluginError, node)
 
         return self.generic_visit(node)
@@ -113,7 +121,7 @@ class LocalImportPluginConfig:
 
 class LocalImportPlugin(Plugin):
     name = 'flake8_local_import'
-    version = '1.0.4'
+    version = '1.0.5'
     visitors = [LocalImportPluginVisitor]
 
     @classmethod
