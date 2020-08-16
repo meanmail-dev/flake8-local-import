@@ -46,6 +46,10 @@ class LocalImportPluginVisitor(Visitor):
         return self.visit_import(node)
 
     def assert_external_module(self, node: ast.stmt, module: str) -> None:
+        parent = getattr(node, 'parent', None)
+        if isinstance(parent, ast.Module):
+            return
+
         module_prefix = module + '.'
 
         is_app_module = getattr(node, 'level', 0) != 0 or any(
@@ -73,6 +77,9 @@ class LocalImportPluginVisitor(Visitor):
 
     def visit_import(self, node: Union[ast.Import, ast.ImportFrom]) -> Any:
         parent = getattr(node, 'parent', None)
+        if isinstance(parent, ast.Module):
+            return self.generic_visit(node)
+
         previous = getattr(node, 'previous', None)
 
         if (not isinstance(parent, ast.FunctionDef) or
@@ -89,7 +96,7 @@ class LocalImportPluginConfig:
 
 class LocalImportPlugin(Plugin):
     name = 'flake8_local_import'
-    version = '1.0.2'
+    version = '1.0.3'
     visitors = [LocalImportPluginVisitor]
 
     @classmethod

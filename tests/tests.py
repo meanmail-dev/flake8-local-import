@@ -113,6 +113,36 @@ def test_code_with_error(code: str):
 
         statement
     """), id='Import from after statement'
+    ),
+    pytest.param(
+        textwrap.dedent("""
+    import app_package.module
+    """), id='Global import app module'
+    ),
+    pytest.param(
+        textwrap.dedent("""
+    from app_package import module
+    """), id='Global from import app module'
+    ),
+    pytest.param(
+        textwrap.dedent("""
+    import external_package
+    """), id='Global import external package'
+    ),
+    pytest.param(
+        textwrap.dedent("""
+    from external_package import A
+    """), id='Global from import builtin'
+    ),
+    pytest.param(
+        textwrap.dedent("""
+    import sys
+    """), id='Global import builtin'
+    ),
+    pytest.param(
+        textwrap.dedent("""
+    from os import path
+    """), id='Global from import builtin'
     )
 ])
 def test_code_without_error(code: str):
