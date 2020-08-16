@@ -104,7 +104,7 @@ def test_code_with_error(code: str):
             from app_package import A
             
             statement
-        """), id='Import from after statement'
+        """), id='Import from'
     ),
     pytest.param(
         textwrap.dedent("""
@@ -112,7 +112,7 @@ def test_code_with_error(code: str):
         from .. import A
 
         statement
-    """), id='Import from after statement'
+    """), id='Import from'
     ),
     pytest.param(
         textwrap.dedent("""
@@ -143,6 +143,28 @@ def test_code_with_error(code: str):
         textwrap.dedent("""
     from os import path
     """), id='Global from import builtin'
+    ),
+    pytest.param(
+        textwrap.dedent("""
+    def func():
+        \"\"\"Documentation\"\"\"
+        from app_package import A
+
+        statement
+    """), id='Import from after docstring'
+    ),
+    pytest.param(
+        textwrap.dedent("""
+    def func():
+        \"\"\"Documentation\"\"\"    
+        statement
+    """), id='Without import, with docstring'
+    ),
+    pytest.param(
+        textwrap.dedent("""
+    def func():
+        statement
+    """), id='Without import'
     )
 ])
 def test_code_without_error(code: str):
