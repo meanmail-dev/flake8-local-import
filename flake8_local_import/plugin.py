@@ -1,5 +1,6 @@
 import argparse
 import ast
+from functools import cached_property
 from typing import Any, List, Optional, Union
 
 from flake8.options.manager import OptionManager
@@ -25,6 +26,10 @@ class BuiltinModulesDisallowedPluginError(Error):
 
 
 class LocalImportPluginVisitor(Visitor):
+    @cached_property
+    def application_import_names(self) -> List[str]:
+        return self.config.application_import_names
+
     def visit(self, node: ast.AST) -> Any:
         previous = None
         for child in ast.iter_child_nodes(node):
@@ -36,29 +41,33 @@ class LocalImportPluginVisitor(Visitor):
 
     def visit_Import(self, node: ast.Import) -> Any:
         for name in node.names:
-            self.assert_external_module(node, name.name)
+            self.assert_external_module(node, name.name or '')
 
         return self.visit_import(node)
 
     def assert_external_module(self, node: ast.stmt, module: str) -> None:
         module_prefix = module + '.'
 
-        is_app_module = any(module_prefix.startswith(app_module + '.')
-                            for app_module in self.config.application_import_names)
+        is_app_module = getattr(node, 'level', 0) != 0 or any(
+            module_prefix.startswith(app_module + '.')
+            for app_module in self.application_import_names
+        )
         is_builtin_module = module.split('.')[0] in BUILTIN_MODULE_NAMES
 
-        if not is_app_module:
-            if not is_builtin_module:
-                self.error_from_node(
-                    ExternalPackagesDisallowedPluginError, node
-                )
-            else:
-                self.error_from_node(
-                    BuiltinModulesDisallowedPluginError, node
-                )
+        if is_app_module:
+            return
+
+        if not is_builtin_module:
+            self.error_from_node(
+                ExternalPackagesDisallowedPluginError, node
+            )
+        else:
+            self.error_from_node(
+                BuiltinModulesDisallowedPluginError, node
+            )
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> Any:
-        self.assert_external_module(node, node.module)
+        self.assert_external_module(node, node.module or '')
 
         return self.visit_import(node)
 

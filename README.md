@@ -25,12 +25,19 @@ No configuration required
 def func():
     statement
 
-    from some_package import A   # LI100 Local import must be at the beginning of the method body
+    from app_package import A   # LI100 Local import must be at the beginning of the method body
+
+
+#  Error
+def func():
+    statement
+
+    from app_package import A   # LI100 Local import must be at the beginning of the method body
 
 
 # Good
 def func():
-    from some_package import A
+    from app_package import A
 
     statement
 
@@ -42,6 +49,8 @@ def func():
 |code|description|
 |---|---|
 |LI100|Local import must be at the beginning of the method body|
+|LI101|Packages from external modules should not be imported locally|
+|LI102|Packages from standard modules should not be imported locally|
 
 
 # Links
