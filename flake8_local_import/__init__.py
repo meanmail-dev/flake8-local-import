@@ -1,0 +1,1 @@
+from flake8_local_import.plugin import LocalImportPlugin
