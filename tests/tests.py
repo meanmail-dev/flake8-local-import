@@ -93,7 +93,7 @@ def test_code_with_error(code: str):
         LocalImportPluginVisitor,
         code,
         LocalImportBeginningMethodBodyPluginError,
-        config=LocalImportPluginConfig(application_import_names=['app_package'])
+        config=LocalImportPluginConfig(app_import_names=['app_package'])
     )
 
 
@@ -119,7 +119,7 @@ def test_code_without_error(code: str):
     assert_not_error(
         LocalImportPluginVisitor,
         code,
-        config=LocalImportPluginConfig(application_import_names=['app_package'])
+        config=LocalImportPluginConfig(app_import_names=['app_package'])
     )
 
 
@@ -144,7 +144,7 @@ def test_code_external_packages_disallowed(code: str):
         LocalImportPluginVisitor,
         code,
         ExternalPackagesDisallowedPluginError,
-        config=LocalImportPluginConfig(application_import_names=['app_package'])
+        config=LocalImportPluginConfig(app_import_names=['app_package'])
     )
 
 
@@ -169,5 +169,5 @@ def test_code_builtin_modules_disallowed(code: str):
         LocalImportPluginVisitor,
         code,
         BuiltinModulesDisallowedPluginError,
-        config=LocalImportPluginConfig(application_import_names=['app_package'])
+        config=LocalImportPluginConfig(app_import_names=['app_package'])
     )

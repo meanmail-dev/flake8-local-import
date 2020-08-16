@@ -15,7 +15,7 @@ long_description = (this_directory / 'README.md').read_text()
 setuptools.setup(
     name="flake8_local_import",
     license="MIT",
-    version="1.0.1",
+    version="1.0.2",
     description="Python 3 check local import for flake8",
     long_description=long_description,
     long_description_content_type='text/markdown',

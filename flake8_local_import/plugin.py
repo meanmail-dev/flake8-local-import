@@ -27,8 +27,8 @@ class BuiltinModulesDisallowedPluginError(Error):
 
 class LocalImportPluginVisitor(Visitor):
     @cached_property
-    def application_import_names(self) -> List[str]:
-        return self.config.application_import_names
+    def app_import_names(self) -> List[str]:
+        return self.config.app_import_names
 
     def visit(self, node: ast.AST) -> Any:
         previous = None
@@ -50,7 +50,7 @@ class LocalImportPluginVisitor(Visitor):
 
         is_app_module = getattr(node, 'level', 0) != 0 or any(
             module_prefix.startswith(app_module + '.')
-            for app_module in self.application_import_names
+            for app_module in self.app_import_names
         )
         is_builtin_module = module.split('.')[0] in BUILTIN_MODULE_NAMES
 
@@ -83,21 +83,23 @@ class LocalImportPluginVisitor(Visitor):
 
 
 class LocalImportPluginConfig:
-    def __init__(self, application_import_names: List[str]):
-        self.application_import_names = application_import_names
+    def __init__(self, app_import_names: List[str]):
+        self.app_import_names = app_import_names
 
 
 class LocalImportPlugin(Plugin):
     name = 'flake8_local_import'
-    version = '1.0.1'
+    version = '1.0.2'
     visitors = [LocalImportPluginVisitor]
 
     @classmethod
     def add_options(cls, options_manager: OptionManager):
         options_manager.add_option(
-            '--application-import-names',
+            '--app-import-names',
             default='',
-            type=str
+            type=str,
+            comma_separated_list=True,
+            parse_from_config=True
         )
 
     @classmethod
@@ -105,5 +107,5 @@ class LocalImportPlugin(Plugin):
                                 options: argparse.Namespace,
                                 args: List[str]) -> Optional[TConfig]:
         return LocalImportPluginConfig(
-            application_import_names=options.application_import_names.split(',')
+            app_import_names=options.app_import_names
         )

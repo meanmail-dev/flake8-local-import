@@ -15,7 +15,7 @@ pip install flake8-local-import
 
 # Configuration
 
-You will want to set the `application-import-names` option to a comma separated
+You will want to set the `app-import-names` option to a comma separated
 list of names that should be considered local to your application. Note that
 relative imports are always considered local.
 
