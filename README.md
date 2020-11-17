@@ -1,5 +1,5 @@
 # flake8-local-import
-[![Downloads](https://pepy.tech/badge/flake8-local-import/month)](https://pepy.tech/project/flake8-local-import/month)
+[![Downloads](https://pepy.tech/badge/flake8-local-import/month)](https://pepy.tech/project/flake8-local-import)
 ![PyPI](https://img.shields.io/pypi/v/flake8-local-import)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flake8-local-import)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/flake8-local-import)
