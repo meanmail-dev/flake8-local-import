@@ -4,7 +4,7 @@ import setuptools
 
 requires = [
     "flake8 > 3.0.0",
-    "flake8-plugin-utils == 1.3.1",
+    "flake8-plugin-utils ~= 1.3.2",
 ]
 
 flake8_entry_point = 'flake8.extension'
