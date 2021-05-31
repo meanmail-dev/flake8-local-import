@@ -121,7 +121,7 @@ class LocalImportPluginConfig:
 
 class LocalImportPlugin(Plugin):
     name = 'flake8_local_import'
-    version = '1.0.5'
+    version = '1.0.6'
     visitors = [LocalImportPluginVisitor]
 
     @classmethod
