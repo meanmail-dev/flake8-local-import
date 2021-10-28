@@ -26,6 +26,7 @@ setuptools.setup(
         "flake8_local_import",
     ],
     install_requires=requires,
+    python_requires='>=3.8',
     entry_points={
         flake8_entry_point: [
             'LI = flake8_local_import:LocalImportPlugin',
