@@ -13,6 +13,8 @@ Python 3 check local import for flake8
 pip install flake8-local-import
 ```
 
+**Note**: This plugin requires Python 3.8 or above.
+
 # Configuration
 
 You will want to set the `app-import-names` option to a comma separated
